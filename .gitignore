@@ -1,0 +1,4 @@
+# Project exclude paths
+/mall-api/product-api/target/
+/mall-basic/mall-entity/target/
+/mall-basic/mall-mapper/target/
