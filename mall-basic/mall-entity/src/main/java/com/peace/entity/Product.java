@@ -47,5 +47,9 @@ public class Product implements Serializable {
 
     private Date updateTime;
 
+    private Long typeId;
+
+    private String typeName;
+
 
 }
