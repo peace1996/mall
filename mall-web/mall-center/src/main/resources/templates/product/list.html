@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <head>
+    <base href="/" />
     <meta charset="UTF-8">
     <title>Title</title>
+
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"  crossorigin="anonymous" />
 
@@ -12,7 +14,8 @@
         <!--展示开头的按钮-->
         <div class="row">
             <div class="col-md-4 col-md-offset-8">
-                <button type="button" class="btn btn-primary">添加</button>
+<!--                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">添加</button>-->
+                <button type="button" class="btn btn-primary" id="addbox">添加</button>
                 <button type="button" class="btn btn-danger">删除</button>
             </div>
         </div>
@@ -28,7 +31,7 @@
                         <td>商品图片</td>
                         <td>操作</td>
                     </tr>
-                    <tr th:each="product : ${list}">
+                    <tr th:each="product : ${page.rows}">
                         <td th:text="${product.id}"></td>
                         <td th:text="${product.name}"></td>
                         <td th:text="${product.typeName}"></td>
@@ -46,7 +49,7 @@
         <!--展示分页栏-->
         <div class="row">
             <div class="col-md-6">
-                当前第1页，共100条记录，共10页
+                当前第<span th:text="${page.pageNum}"></span>页，共<span th:text="${page.total}"></span>条记录，共<span th:text="${page.pageTotal}"></span>页
             </div>
             <div class="col-md-6">
                 <nav aria-label="Page navigation">
@@ -56,11 +59,10 @@
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
-                        <li class="active"><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
+                        <li class="active" >
+                            <a href="#">1</a>
+                        </li>
+
                         <li>
                             <a href="#" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
@@ -70,8 +72,137 @@
                 </nav>
             </div>
         </div>
+        <!--添加层-->
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" >Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                        <!--内容-->
+                        <form class="form-horizontal" action="product/add" method="post" id="addForm">
+                            <div class="form-group">
+                                <label for="addName" class="col-sm-2 control-label">商品名称</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="addName" name="product.name" placeholder="商品名称">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addPrice" class="col-sm-2 control-label">价格</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="addPrice"  name="product.price" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addSalePrice" class="col-sm-2 control-label">促销价</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="addSalePrice" name="product.salePrice" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addImage" class="col-sm-2 control-label">图片</label>
+                                <div class="col-sm-10">
+                                    <input id="file_upload" type="file" name="file" />
+                                    <img src="#" id="showImage" style="width: 100px;height: 100px; display: none"/>
+                                    <input type="hidden" id="addImage" name="product.images" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addSalePoint" class="col-sm-2 control-label">卖点</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="addSalePoint" name="product.salePoint" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="type_id" class="col-sm-2 control-label">商品类型</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="type_id" value="1" name="product.typeId" >
+                                    <input type="text" class="form-control" id="type_name" value="电子数码" name="product.typeName" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="productDescEdit" class="col-sm-2 control-label">商品描述</label>
+                                <div class="col-sm-10" id="productDescEdit">
+                                </div>
+                                <input type="hidden" name="productDesc" id="productDesc" />
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="add">提交</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
     </div>
+    <!--jquery-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js" crossorigin="anonymous"></script>
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"  crossorigin="anonymous"></script>
+    <!-- uploadify 上传插件 -->
+    <link href="css/uploadifive.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/jquery.uploadifive.js"></script>
+    <!--富文本框-->
+    <script src="https://cdn.jsdelivr.net/npm/wangeditor@latest/dist/wangEditor.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function() {
+            //初始化上传按钮
+            $("#file_upload").uploadifive({
+                'buttonText' :'文件上传',//通过文字替换钮扣上的文字
+                'uploadScript' : 'file/upload',//实现上传的程序
+                'fileObjName' : 'file',  //上传的文件对象名
+                'onUploadComplete' : function (file,data) {
+                    console.log(data);
+                    //图片的回显
+                    var result = JSON.parse(data);
+                    $("#showImage").attr("src",result.data);
+                    $("#showImage").show();
+                    $("#addImage").val(result.data);
+                }
+            });
+            //给添加按钮绑定事件
+            $("#addbox").click(function (){
+                //弹出层
+                $('#addModal').modal({
+                    backdrop: "static"
+                })
+            });
+            //添加
+            $("#add").click(function () {
+                //获取富文本框里的内容
+                var content = editor.txt.html();
+                $("#productDesc").val(content);
+                $("#addForm").submit();
+            })
+            //初始化富文本框
+            const E = window.wangEditor;
+            const editor = new E('#productDescEdit');
+            // 或者 const editor = new E( document.getElementById('div1') )
+            // 配置菜单栏，删减菜单，调整顺序
+            editor.config.menus = [
+                'head',
+                'bold',
+                'fontSize',
+                'fontName',
+                'foreColor',
+                'emoticon',
+                'image',
+                'video',
+                'undo',
+                'redo'
+            ]
+            //自定义filename
+            editor.config.uploadFileName = 'files'
+            // 配置 server 接口地址
+            editor.config.uploadImgServer = 'file/batchUpload'
+
+            editor.create()
+        })
+
+    </script>
 </body>
 </html>

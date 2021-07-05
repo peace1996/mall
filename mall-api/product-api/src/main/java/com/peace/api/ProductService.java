@@ -3,9 +3,8 @@ package com.peace.api;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.pagehelper.PageInfo;
 import com.peace.entity.Product;
-
-import java.util.List;
-import java.util.Map;
+import com.peace.vo.PageInfoVO;
+import com.peace.vo.ProductVO;
 
 /**
  * <p>
@@ -24,5 +23,12 @@ public interface ProductService extends IService<Product> {
     public PageInfo<Product> page(Integer pageIndex,Integer pageSize);
 
 
-    public Map pageList(Integer pageIndex,Integer pageSize);
+    public PageInfoVO pageList(Integer pageIndex, Integer pageSize);
+
+    /**
+     * 添加
+     * @param productVO
+     * @return
+     */
+    public Long add(ProductVO productVO);
 }

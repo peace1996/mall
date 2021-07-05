@@ -1,0 +1,15 @@
+# 服务端口
+server:
+  port: 9002
+dubbo:
+  application:
+    name: web-index
+  registry:
+    address: 192.168.109.111:2181
+    protocol: zookeeper
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  thymeleaf:
+    cache: false

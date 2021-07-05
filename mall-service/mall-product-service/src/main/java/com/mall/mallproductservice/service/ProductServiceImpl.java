@@ -8,11 +8,15 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.peace.api.ProductService;
 import com.peace.entity.Product;
+import com.peace.entity.ProductDesc;
+import com.peace.mapper.ProductDescMapper;
 import com.peace.mapper.ProductMapper;
+import com.peace.vo.PageInfoVO;
+import com.peace.vo.ProductVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -24,6 +28,9 @@ import java.util.Map;
  */
 @Service
 public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements ProductService {
+
+    @Autowired
+    private ProductDescMapper productDescMapper;
 
     @Override
     public Product getProductById(Long id) {
@@ -38,12 +45,13 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 //        List<Product> products = baseMapper.selectList(null);
         List<Product> products = this.list(null);
         //3.返回分页对象
-        PageInfo<Product> pageInfo = new PageInfo<>(products,1);
+        PageInfo<Product> pageInfo = new PageInfo<>(products,3);
         return pageInfo;
     }
 
     @Override
-    public Map pageList(Integer pageIndex, Integer pageSize) {
+    public PageInfoVO pageList(Integer pageIndex, Integer pageSize) {
+        PageInfoVO pageInfoVo = new PageInfoVO();
         //创建page对象
         Page<Product> pageTeacher = new Page<Product>(pageIndex,pageSize);
         //构建查询条件(多条件组合查询)
@@ -58,10 +66,29 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         long total = pageTeacher.getTotal();
         //数据集合
         List<Product> records = pageTeacher.getRecords();
-        Map map = new HashMap();
-        map.put("total",total);
-        map.put("rows",records);
-        return map;
+        pageInfoVo.setPageNum(pageTeacher.getCurrent());
+        //获取总页数
+        pageInfoVo.setPageTotal(total%pageSize == 0 ? total/pageSize : total/pageSize+1);
+        pageInfoVo.setTotal(total);
+        pageInfoVo.setRows(records);
+//        Map map = new HashMap();
+//        map.put("total",total);
+//        map.put("rows",records);
+        return pageInfoVo;
+    }
+
+    @Override
+    @Transactional
+    public Long add(ProductVO productVO) {
+        //1.添加商品的基本信息
+        baseMapper.insert(productVO.getProduct());
+        //2.添加商品描述信息
+        ProductDesc productDesc = new ProductDesc();
+        productDesc.setProductId(productVO.getProduct().getId());
+        productDesc.setProductDesc(productVO.getProductDesc());
+        productDescMapper.insert(productDesc);
+        System.out.println(productVO.getProduct().getId());
+        return productVO.getProduct().getId();
     }
 
 

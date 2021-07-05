@@ -13,7 +13,7 @@ public class CommonConfig {
      * pagehelper分页配置
      * @return
      */
-    @Bean
+//    @Bean
     public PageHelper getPageHelper(){
         PageHelper pageHelper = new PageHelper();
         //设置属性
