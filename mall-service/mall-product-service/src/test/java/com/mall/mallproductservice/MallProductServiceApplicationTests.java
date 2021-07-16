@@ -7,10 +7,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
+
 @SpringBootTest
 class MallProductServiceApplicationTests { //p95
     @Autowired
     private ProductService productService;
+    @Autowired
+    private DataSource dataSource;
     @Test
     void contextLoads() {
         ProductVO productVO = new ProductVO();
@@ -25,6 +30,10 @@ class MallProductServiceApplicationTests { //p95
         productVO.setProduct(product);
         productVO.setProductDesc("苹果最新一代手机");
         System.out.println(productService.add(productVO));
+    }
+    @Test
+    void databasetest() throws SQLException {
+        System.out.println(dataSource.getConnection());
     }
 
 }

@@ -29,5 +29,4 @@ class MallCenterApplicationTests {
     void deleteTest() throws FileNotFoundException {
         client.deleteFile("group1/M00/00/00/wKhtb2DUQ_qAbPumAAIZZWo9TqU84.jpeg");
     }
-
 }

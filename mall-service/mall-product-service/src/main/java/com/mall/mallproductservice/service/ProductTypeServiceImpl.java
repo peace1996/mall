@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.peace.api.ProductTypeService;
 import com.peace.entity.ProductType;
 import com.peace.mapper.ProductTypeMapper;
-import org.springframework.stereotype.Service;
+import com.alibaba.dubbo.config.annotation.Service;
 
 /**
  * <p>

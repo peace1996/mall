@@ -18,6 +18,19 @@
             <version>RELEASE</version>
             <scope>compile</scope>
         </dependency>
+        <!--mybatis-plus 持久层-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.0.5</version>
+            <!--添加了alibaba的druid，故排除springboot自带的HikariCP连接池依赖-->
+            <exclusions>
+                <exclusion>
+                    <groupId>com.zaxxer</groupId>
+                    <artifactId>HikariCP</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <properties>
